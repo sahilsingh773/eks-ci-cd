@@ -8,16 +8,22 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for OIDC
+      contents: read   # To read the repository contents
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: Configure AWS Credentials
+      - name: Configure AWS Credentials (OIDC)
         uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1  # Update this to your AWS region
+          role-to-assume: arn:aws:iam::218306567362:role/GitHubActionsRole
+          aws-region: ap-south-1  # Change to your AWS region
+
+      - name: Verify AWS Authentication
+        run: aws sts get-caller-identity
 
       - name: Login to Amazon ECR
         id: login-ecr
