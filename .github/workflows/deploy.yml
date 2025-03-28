@@ -25,20 +25,20 @@ jobs:
       - name: Verify AWS Authentication
         run: aws sts get-caller-identity
 
+      - name: Update Kubeconfig
+        run: aws eks update-kubeconfig --region ap-south-1 --name my-cluster
+
+      - name: Debug EKS Access
+        run: kubectl get nodes
+
       - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Update Kubeconfig
-        run: aws eks update-kubeconfig --region ap-south-1 --name infra-kubeflow
-	
-      - name: Debug EKS Access
-        run: kubectl get nodes
-      
       - name: Deploy to EKS
         run: |
           kubectl apply -f k8s/deployment.yaml --validate=false
-          kubectl apply -f k8s/service.yaml
+          kubectl apply -f k8s/service.yaml --validate=false
 
       - name: Verify Deployment
         run: kubectl get pods -o wide
