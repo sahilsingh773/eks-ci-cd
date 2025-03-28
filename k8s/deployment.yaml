@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: demo-app
-          image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/demo-app:latest
+          image: 218306567362.dkr.ecr.ap-south-1.amazonaws.com/demo-ecr:latest
           ports:
             - containerPort: 80
 
